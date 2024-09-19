@@ -23,15 +23,7 @@ There are 5 resources:
 Please fork the repository into your account and continue the development in your fork.
 
 Your tasks
-- Add missing APIs mentioned here and get the automated tests to pass
-- Add tests for grading API
-- Please be aware that intentional bugs have been incorporated into the application, leading to test failures. Kindly address and rectify these issues as part of the assignment.
-- All tests should pass
-- Get the test coverage to 94% or above
-- There are certain SQL tests present inside `tests/SQL/`. You have to write SQL in following files:
-    - count_grade_A_assignments_by_teacher_with_max_grading.sql
-    - number_of_graded_assignments_for_each_student.sql
-- Optionally, Dockerize your application by creating a Dockerfile and a docker-compose.yml file, providing clear documentation on building and running the application with Docker, to stand out in your submission
+5-32336
 
 ***Once you are done with your task, please use [this form](https://forms.gle/TbpVhYojG84cyUD77) to complete your submission.***
 
