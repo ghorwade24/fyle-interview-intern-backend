@@ -3,6 +3,7 @@ from sqlalchemy import text
 
 from core import db
 from core.models.assignments import Assignment, AssignmentStateEnum, GradeEnum
+from sqlalchemy import text
 
 
 def create_n_graded_assignments_for_teacher(number: int = 0, teacher_id: int = 1) -> int:
@@ -54,19 +55,19 @@ def test_get_assignments_in_graded_state_for_each_student():
     """Test to get graded assignments for each student"""
 
     # Find all the assignments for student 1 and change its state to 'GRADED'
-    submitted_assignments: Assignment = Assignment.filter(Assignment.student_id == 1)
+    submitted_assignments: Assignment = Assignment.query.filter(Assignment.student_id == 1).all()
 
     # Iterate over each assignment and update its state
     for assignment in submitted_assignments:
         assignment.state = AssignmentStateEnum.GRADED  # Or any other desired state
 
-    # Flush the changes to the database session
-    db.session.flush()
+    # Flush the changes to the database session 
+    # db.session.flush()
     # Commit the changes to the database
     db.session.commit()
 
     # Define the expected result before any changes
-    expected_result = [(1, 3)]
+    expected_result = [(1, len(submitted_assignments))]
 
     # Execute the SQL query and compare the result with the expected result
     with open('tests/SQL/number_of_graded_assignments_for_each_student.sql', encoding='utf8') as fo:
@@ -80,13 +81,13 @@ def test_get_assignments_in_graded_state_for_each_student():
 
 def test_get_grade_A_assignments_for_teacher_with_max_grading():
     """Test to get count of grade A assignments for teacher which has graded maximum assignments"""
-
+    grade_a_count_1 = create_n_graded_assignments_for_teacher(5)
     # Read the SQL query from a file
     with open('tests/SQL/count_grade_A_assignments_by_teacher_with_max_grading.sql', encoding='utf8') as fo:
         sql = fo.read()
 
     # Create and grade 5 assignments for the default teacher (teacher_id=1)
-    grade_a_count_1 = create_n_graded_assignments_for_teacher(5)
+   
     
     # Execute the SQL query and check if the count matches the created assignments
     sql_result = db.session.execute(text(sql)).fetchall()

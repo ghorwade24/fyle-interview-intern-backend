@@ -42,6 +42,8 @@ def grade_assignment(payload: dict, db: Session = Depends(get_db), principal: di
     assignment = db.query(Assignment).filter(Assignment.id == assignment_id).first()
     if not assignment:
         raise HTTPException(status_code=404, detail="Assignment not found")
+    if assignment.state != "DRAFT":
+        raise HTTPException(status_code=400,detail="Cannot grade an assignment in DRAFT state")
 
     # Update assignment grade and state
     assignment.grade = grade

@@ -3,6 +3,7 @@ from core import db
 from core.apis import decorators
 from core.apis.responses import APIResponse
 from core.models.assignments import Assignment
+from flask import request, jsonify
 
 from .schema import AssignmentSchema, AssignmentSubmitSchema
 student_assignments_resources = Blueprint('student_assignments_resources', __name__)
@@ -36,6 +37,7 @@ def upsert_assignment(p, incoming_payload):
 @decorators.authenticate_principal
 def submit_assignment(p, incoming_payload):
     """Submit an assignment"""
+    data = request.json
     submit_assignment_payload = AssignmentSubmitSchema().load(incoming_payload)
 
     submitted_assignment = Assignment.submit(
@@ -45,4 +47,6 @@ def submit_assignment(p, incoming_payload):
     )
     db.session.commit()
     submitted_assignment_dump = AssignmentSchema().dump(submitted_assignment)
+    if not data.get('content'):
+        return jsonify({"error": "Content cannot be null"}), 400
     return APIResponse.respond(data=submitted_assignment_dump)
